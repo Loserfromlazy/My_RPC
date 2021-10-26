@@ -8,6 +8,7 @@ import io.netty.channel.ChannelPipeline;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.ServerSocketChannel;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.codec.string.StringEncoder;
 import org.springframework.beans.factory.DisposableBean;
@@ -38,7 +39,7 @@ public class RpcServer implements DisposableBean {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             serverBootstrap
                     .group(bossGroup,workerGroup)
-                    .channel(ServerSocketChannel.class)
+                    .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {

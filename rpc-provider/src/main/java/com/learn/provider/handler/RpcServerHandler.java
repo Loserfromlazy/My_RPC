@@ -5,6 +5,7 @@ import com.learn.provider.anno.RpcService;
 import com.learn.rpc.common.RpcRequest;
 import com.learn.rpc.common.RpcResponse;
 import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.springframework.beans.BeansException;
@@ -33,6 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 2021/10/23
  */
 @Component
+@ChannelHandler.Sharable
 public class RpcServerHandler extends SimpleChannelInboundHandler implements ApplicationContextAware {
 
     private static final Map SERVICE_INSTANCE_MAP = new ConcurrentHashMap();
@@ -40,8 +42,7 @@ public class RpcServerHandler extends SimpleChannelInboundHandler implements App
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         //将msg转换成RpcRequest
-        ByteBuf buf = (ByteBuf) msg;
-        RpcRequest rpcRequest = JSON.parseObject(buf.toString(), RpcRequest.class);
+        RpcRequest rpcRequest = JSON.parseObject(msg.toString(), RpcRequest.class);
         RpcResponse rpcResponse = new RpcResponse();
         rpcResponse.setRequestId(rpcRequest.getRequestId());
         try {
